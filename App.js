@@ -1,24 +1,42 @@
 import React from 'react';
 import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
+// Screen components
+import ImpairmentScreen from './screen/ImpairmentScreen';
+import NoImpairmentScreen from './screen/NoImpairmentScreen';
 
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Impairment" component={ImpairmentScreen} />
+        <Stack.Screen name="NoImpairment" component={NoImpairmentScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function HomeScreen({ navigation }) {
+  return (
     <View style={styles.container}>
-      <Image source={require('./assets/logo.png')} style = {styles.logo}/>
+      <Image source={require('./assets/logo.png')} style={styles.logo} />
       <Text style={styles.text}>iCANsee</Text>
       <View style={styles.buttonContainer}>
-        <Pressable 
-        style={[styles.button, styles.buttonVisualImpairment]} 
-        accessible = {true}
-        accessibilityLabel = "시각장애인 모드.">
+        <Pressable
+          style={[styles.button, styles.buttonVisualImpairment]}
+          onPress={() => navigation.navigate('Impairment')}
+        >
           <Text style={styles.buttonText}>시각장애인</Text>
         </Pressable>
-        <Pressable 
-        style={[styles.button, styles.buttonNonVisualImpairment]}
-        accessible = {true}
-        accessibilityLabel = "비시각장애인 모드.">
+        <Pressable
+          style={[styles.button, styles.buttonNonVisualImpairment]}
+          onPress={() => navigation.navigate('NoImpairment')}
+        >
           <Text style={styles.buttonText}>비시각장애인</Text>
         </Pressable>
       </View>
