@@ -1,41 +1,48 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
 
-export default function ImpairmentScreen() {
-  const [hasPermission, setHasPermission] = React.useState(null);
-  const [cameraRef, setCameraRef] = React.useState(null);
+const { width } = Dimensions.get('window');
 
-  React.useEffect(() => {
+export default function App() {
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [camera, setCamera] = useState(null);
+  const [image, setImage] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+
+  useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasCameraPermission(status === 'granted');
     })();
   }, []);
 
   const takePicture = async () => {
-    if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync();
-      console.log('Photo', photo);
-      // 여기에서 사진을 처리하거나 저장하는 로직을 추가할 수 있습니다.
+    if (camera) {
+      const data = await camera.takePictureAsync(null);
+      setImage(data);
     }
-  };
-
-  if (hasPermission === null) {
-    return <View />;
   }
 
-  if (hasPermission === false) {
+  if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
   }
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/logo_text.png')} style={styles.logo} />
-      <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={(ref) => setCameraRef(ref)} />
-      <TouchableOpacity style={styles.button} onPress={takePicture}>
-        <Text style={styles.buttonText}>사진 찍기</Text>
-      </TouchableOpacity>
+      <View style={styles.cameraContainer}>
+        <Camera 
+          ref={ref => setCamera(ref)}
+          style={styles.fixedRatio} 
+          type={type}
+          ratio={'1:1'} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={takePicture}>
+          <Image source={require('../assets/Camera_Action_Button.png')} style={styles.cameraButton} />
+        </TouchableOpacity>
+      </View>
+      {image && <Image source={{ uri: image }} style={{ flex: 1 }} />}
     </View>
   );
 }
@@ -44,29 +51,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  logo: {
-    position: 'absolute',
-    top: 20,
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
+  cameraContainer: {
+    flex: 8,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   camera: {
     flex: 1,
-    width: '100%',
+    aspectRatio: 1,
+    width: '100%'
   },
-  button: {
-    position: 'absolute',
-    bottom: 40,
-    backgroundColor: 'white',
-    padding: 10,
-    borderRadius: 10,
+  buttonContainer: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
   },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  cameraButton: {
+    width: 80,
+    height: 80
+  }
 });

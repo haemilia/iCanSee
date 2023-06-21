@@ -1,27 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
 // Screen components
 import ImpairmentScreen from './screen/ImpairmentScreen';
 import NoImpairmentScreen from './screen/NoImpairmentScreen';
 
-const Stack = createStackNavigator();
-
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Impairment" component={ImpairmentScreen} />
-        <Stack.Screen name="NoImpairment" component={NoImpairmentScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  const [currentScreen, setCurrentScreen] = useState('Home');
+
+  const navigateToScreen = (screenName) => {
+    setCurrentScreen(screenName);
+  };
+
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case 'Home':
+        return <HomeScreen navigateToScreen={navigateToScreen} />;
+      case 'Impairment':
+        return <ImpairmentScreen navigateToScreen={navigateToScreen} />;
+      case 'NoImpairment':
+        return <NoImpairmentScreen navigateToScreen={navigateToScreen} />;
+      default:
+        return null;
+    }
+  };
+
+  return <View style={styles.container}>{renderScreen()}</View>;
 }
 
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigateToScreen }) {
   return (
     <View style={styles.container}>
       <Image source={require('./assets/logo.png')} style={styles.logo} />
@@ -29,13 +36,13 @@ function HomeScreen({ navigation }) {
       <View style={styles.buttonContainer}>
         <Pressable
           style={[styles.button, styles.buttonVisualImpairment]}
-          onPress={() => navigation.navigate('Impairment')}
+          onPress={() => navigateToScreen('Impairment')}
         >
           <Text style={styles.buttonText}>시각장애인</Text>
         </Pressable>
         <Pressable
           style={[styles.button, styles.buttonNonVisualImpairment]}
-          onPress={() => navigation.navigate('NoImpairment')}
+          onPress={() => navigateToScreen('NoImpairment')}
         >
           <Text style={styles.buttonText}>비시각장애인</Text>
         </Pressable>
