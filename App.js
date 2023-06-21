@@ -1,23 +1,23 @@
 import React from 'react';
-import { StyleSheet, View, Image, Text, Pressable, Accessibility} from 'react-native';
+import { StyleSheet, View, Text, Pressable, Accessibility} from 'react-native';
+import ICanSeeLogo from '../assets/iCANsee_logo_yellow.svg';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Image source={require('./assets/logo.png')} style={styles.logo} />
+      <ICanSeeLogo style={styles.logo}/>
       <Text style={styles.text}>iCANsee</Text>
       <View style={styles.buttonContainer}>
         <Pressable 
         style={[styles.button, styles.buttonVisualImpairment]} 
-        accessibile = {true}
-        accessibilityLabel = "시각장애인 모드. 왼쪽을 누르세요.">
+        accessible = {true}
+        accessibilityLabel = "시각장애인 모드.">
           <Text style={styles.buttonText}>시각장애인</Text>
         </Pressable>
         <Pressable 
         style={[styles.button, styles.buttonNonVisualImpairment]}
         accessible = {true}
-        accessibile = {true}
-        accessibilityLabel = "비시각장애인 모드. 오른쪽을 누르세요.">
+        accessibilityLabel = "비시각장애인 모드.">
           <Text style={styles.buttonText}>비시각장애인</Text>
         </Pressable>
       </View>
