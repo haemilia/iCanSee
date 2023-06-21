@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text, Pressable, Accessibility} from 'react-native';
-import ICanSeeLogo from '../assets/iCANsee_logo_yellow.svg';
+import {StyleSheet, View, Text, Pressable} from 'react-native';
+import Logo from '../assets/iCANsee_logo_yellow.svg';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <ICanSeeLogo style={styles.logo}/>
+      <Logo style={styles.logo}/>
+      <Image source={require('./assets/logo.png')}  style = {styles.logo}/>
       <Text style={styles.text}>iCANsee</Text>
       <View style={styles.buttonContainer}>
         <Pressable 
