@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Dimensions, Sa
 import { Camera } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
+import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,6 +27,28 @@ function CameraScreen() {
     })();
   }, []);
 
+  const uploadImage = async (imageUri) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', {
+        uri: imageUri,
+        type: 'image/jpg', // Adjust the image type accordingly
+        name: 'myImage2.jpg', // Adjust the image name accordingly
+      });
+
+      const response = await axios.post('http://34.64.40.136:5000/upload', formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    }
+      );
+      console.log(response)
+      console.log('Image uploaded successfully');
+      // Handle the response from the server after successful upload
+    } catch (error) {
+      console.log('Image upload failed', error);
+      // Handle the error if the upload fails
+    }
+  };
 
   const takePicture = async () => {
     if (camera) {
@@ -37,6 +60,7 @@ function CameraScreen() {
         to: newUri,
       });
       setImage(newUri);
+      uploadImage(newUri)
       navigation.navigate('Output',{imageUri: newUri});
     }
   }
