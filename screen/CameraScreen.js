@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Camera } from 'expo-camera';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-function CameraScreen({navigation}) {
+function CameraScreen() {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
@@ -19,9 +19,13 @@ function CameraScreen({navigation}) {
 
   const takePicture = async () => {
     if (camera) {
-      const data = await camera.takePictureAsync(null);
-      setImage(data);
+      const { uri } = await camera.takePictureAsync();
+      setImage(uri);
     }
+  }
+
+  if (hasCameraPermission === null) {
+    return <Text>Requesting camera permission</Text>;
   }
 
   if (hasCameraPermission === false) {
@@ -33,16 +37,15 @@ function CameraScreen({navigation}) {
       <View style={styles.cameraContainer}>
         <Camera 
           ref={ref => setCamera(ref)}
-          style={styles.fixedRatio} 
+          style={styles.camera}
           type={type}
-          ratio={'1:1'} />
+        />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={takePicture}>
           <Image source={require('../assets/Camera_Action_Button.png')} style={styles.cameraButton} />
         </TouchableOpacity>
       </View>
-      {image && <Image source={{ uri: image }} style={{ flex: 1 }} />}
     </View>
   );
 }
@@ -53,24 +56,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   cameraContainer: {
-    flex: 8,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  camera: {
     flex: 1,
-    aspectRatio: 1,
-    width: '100%'
-  },
-  buttonContainer: {
-    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'black',
+  },
+  camera: {
+    width: width,
+    height: height,
+    flex: 1,
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
   },
   cameraButton: {
     width: 80,
-    height: 80
+    height: 80,
   }
 });
 
