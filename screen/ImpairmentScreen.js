@@ -4,7 +4,7 @@ import { Camera } from 'expo-camera';
 
 const { width } = Dimensions.get('window');
 
-export default function App() {
+function CameraScreen({navigation}) {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
@@ -73,3 +73,5 @@ const styles = StyleSheet.create({
     height: 80
   }
 });
+
+export default CameraScreen;

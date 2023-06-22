@@ -1,54 +1,24 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Image, Text, Pressable } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import {StyleSheet, View, Image, Text, Pressable} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CameraScreen from './screen/ImpairmentScreen';
+import HomeScreen from './screen/HomeScreen';
 
-// Screen components
-import ImpairmentScreen from './screen/ImpairmentScreen';
-import NoImpairmentScreen from './screen/NoImpairmentScreen';
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState('Home');
-
-  const navigateToScreen = (screenName) => {
-    setCurrentScreen(screenName);
-  };
-
-  const renderScreen = () => {
-    switch (currentScreen) {
-      case 'Home':
-        return <HomeScreen navigateToScreen={navigateToScreen} />;
-      case 'Impairment':
-        return <ImpairmentScreen navigateToScreen={navigateToScreen} />;
-      case 'NoImpairment':
-        return <NoImpairmentScreen navigateToScreen={navigateToScreen} />;
-      default:
-        return null;
-    }
-  };
-
-  return <View style={styles.container}>{renderScreen()}</View>;
-}
-
-function HomeScreen({ navigateToScreen }) {
   return (
-    <View style={styles.container}>
-      <Image source={require('./assets/logo.png')} style={styles.logo} />
-      <Text style={styles.text}>iCANsee</Text>
-      <View style={styles.buttonContainer}>
-        <Pressable
-          style={[styles.button, styles.buttonVisualImpairment]}
-          onPress={() => navigateToScreen('Impairment')}
-        >
-          <Text style={styles.buttonText}>시각장애인</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.button, styles.buttonNonVisualImpairment]}
-          onPress={() => navigateToScreen('NoImpairment')}
-        >
-          <Text style={styles.buttonText}>비시각장애인</Text>
-        </Pressable>
-      </View>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Camera" component={CameraScreen} />
+        
+      </Stack.Navigator>
+    </NavigationContainer>
   );
+  
 }
 
 const styles = StyleSheet.create({
@@ -57,37 +27,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-  },
-  text: {
-    marginTop: 20,
-    color: 'white',
-    fontSize: 24,
-  },
-  buttonContainer: {
-    marginTop: 30,
-    flexDirection: 'row',
-  },
-  button: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginRight: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'black',
-    fontSize: 16,
-  },
-  buttonVisualImpairment: {
-    backgroundColor: 'yellow',
-  },
-  buttonNonVisualImpairment: {
-    backgroundColor: 'white',
   },
 });
