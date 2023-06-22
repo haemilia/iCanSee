@@ -4,11 +4,14 @@ import {StyleSheet, View, Image, Text, Pressable} from 'react-native';
 function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/logo.png')} style={styles.logo} />
-      <Text style={styles.text}>iCANsee</Text>
+      <View style={styles.logoContainer}>
+        <Image source={require('../assets/logo.png')} style={styles.logo} />
+      </View>
+        <Image source={require('../assets/logo_text.png')} style={styles.textlogo} />
+      
       <View style={styles.buttonContainer}>
         <Pressable 
-        style={[styles.button, styles.buttonVisualImpairment]} 
+        style={[styles.button, styles.button0]} 
         onPress={() => navigation.navigate('Camera')}
         accessible = {true}
         accessibilityLabel = "카메라에 접속해 사진찍기">
@@ -27,15 +30,20 @@ function HomeScreen({navigation}) {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    logoContainer:{
+      marginBottom: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     logo: {
       width: 100,
       height: 100,
       resizeMode: 'contain',
     },
-    text: {
-      marginTop: 20,
-      color: 'white',
-      fontSize: 24,
+    textlogo: {
+      width: 150,
+      resizeMode: 'contain',
+      
     },
     buttonContainer: {
       marginTop: 30,
@@ -48,16 +56,15 @@ function HomeScreen({navigation}) {
       marginRight: 10,
       justifyContent: 'center',
       alignItems: 'center',
+      width: 200, // Increase the button width
+      height: 80, // Increase the button height
     },
     buttonText: {
       color: 'black',
-      fontSize: 16,
+      fontSize: 32,
     },
-    buttonVisualImpairment: {
+    button0: {
       backgroundColor: 'yellow',
-    },
-    buttonNonVisualImpairment: {
-      backgroundColor: 'white',
     },
   });
 export default HomeScreen;
