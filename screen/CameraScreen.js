@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native';
 import { Camera } from 'expo-camera';
+import { useNavigation } from '@react-navigation/native';
+import * as FileSystem from 'expo-file-system';
 
 const { width, height } = Dimensions.get('window');
+
+const navigation = useNavigation();
 
 function CameraScreen() {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
 
   useEffect(() => {
     (async () => {
@@ -17,16 +20,21 @@ function CameraScreen() {
     })();
   }, []);
 
+
   const takePicture = async () => {
     if (camera) {
       const { uri } = await camera.takePictureAsync();
-      setImage(uri);
+      const filename = uri.substring(uri.lastIndexOf('/') + 1);
+      const newUri = `${FileSystem.documentDirectory}images/${filename}`;
+      await FileSystem.moveAsync({
+        from: uri,
+        to: newUri,
+      });
+      setImage(newUri);
+      navigation.navigate('Output');
     }
   }
-
-  if (hasCameraPermission === null) {
-    return <Text>Requesting camera permission</Text>;
-  }
+  
 
   if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>;
@@ -41,11 +49,14 @@ function CameraScreen() {
         <Camera 
           ref={ref => setCamera(ref)}
           style={styles.camera}
-          type={type}
+          type={Camera.Constants.Type.back}
         />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={takePicture}>
+        <TouchableOpacity 
+          onPress={takePicture}
+          accessible = {true}
+          accessibilityLabel = "촬영 버튼">
           <Image source={require('../assets/Camera_Action_Button.png')} style={styles.cameraButton} />
         </TouchableOpacity>
       </View>
