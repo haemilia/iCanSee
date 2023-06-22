@@ -5,7 +5,7 @@ export function TempOutput({navigation}) {
     const [stringInput, setStringInput] = useState('Something');  
 
     const handleButtonPress = (stringInput) => {
-        navigation.navigate('Result', { result: {stringInput.toString()}});
+        navigation.navigate('Result', { result: stringInput.toString()});
 
     };
 
