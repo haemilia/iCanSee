@@ -37,7 +37,7 @@ function CameraScreen() {
         to: newUri,
       });
       setImage(newUri);
-      navigation.navigate('Output');
+      navigation.navigate('Output',{imageUri: newUri});
     }
   }
   

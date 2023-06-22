@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, Pressable,  TextInput, Button} from 'react-native';
+import {StyleSheet, View, Text, Image, Pressable,  TextInput, Button} from 'react-native';
 
-export function TempOutput({navigation}) {  
+export function TempOutput({navigation, route}) {  
     const [stringInput, setStringInput] = useState('Something');  
+    const {imageUri} = route.params;
 
     const handleButtonPress = () => {
         navigation.navigate('Result', { result: stringInput });
@@ -10,6 +11,7 @@ export function TempOutput({navigation}) {
 
     return (
         <View style={styles.container}>
+          <Image source={{uri:imageUri}} style={{width:200, height:200}}></Image>
           <TextInput
             style={styles.input}
             placeholder="Enter"
