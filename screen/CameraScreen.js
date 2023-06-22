@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native';
 import { Camera } from 'expo-camera';
 
 const { width, height } = Dimensions.get('window');
@@ -33,7 +33,10 @@ function CameraScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.topBar}>
+        <Image source={require('../assets/logo_text.png')} style={styles.textLogo} />
+      </View>
       <View style={styles.cameraContainer}>
         <Camera 
           ref={ref => setCamera(ref)}
@@ -46,7 +49,7 @@ function CameraScreen() {
           <Image source={require('../assets/Camera_Action_Button.png')} style={styles.cameraButton} />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -55,8 +58,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
   },
-  cameraContainer: {
+  topBar: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  textLogo: {
+    height: '70%',
+    resizeMode: 'contain',
+  },
+  cameraContainer: {
+    flex: 7.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -66,9 +79,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
+    flex: 1.5,
     alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black'
   },
   cameraButton: {
     width: 80,
