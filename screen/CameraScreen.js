@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity, Dimensions, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, SafeAreaView, Pressable} from 'react-native';
 import { Camera } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const { width, height } = Dimensions.get('window');
 
-function CameraScreen() {
+export function CameraScreen() {
   useEffect(() => {
     (async () => {
       const imagesDir = `${FileSystem.documentDirectory}images/`;
@@ -19,6 +19,7 @@ function CameraScreen() {
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
+  let [serverResponse, setResponse] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -36,13 +37,19 @@ function CameraScreen() {
         name: 'myImage2.jpg', // Adjust the image name accordingly
       });
 
+      
       const response = await axios.post('http://34.64.40.136:5000/upload', formData,
       {
         headers: { 'Content-Type': 'multipart/form-data' },
-    }
+      }
       );
-      console.log(response)
-      console.log('Image uploaded successfully');
+      const prediction = response.data['prediction'];
+
+      serverResponse = prediction
+      // setResponse(prediction);
+      console.log(serverResponse); // Access the updated state value here
+      console.log('Image uploaded successfully'); 
+      
       // Handle the response from the server after successful upload
     } catch (error) {
       console.log('Image upload failed', error);
@@ -60,8 +67,10 @@ function CameraScreen() {
         to: newUri,
       });
       setImage(newUri);
-      uploadImage(newUri)
-      navigation.navigate('Output',{imageUri: newUri});
+      await uploadImage(newUri);
+
+      console.log(serverResponse);
+      navigation.navigate('Result', { response: serverResponse });
     }
   }
   
@@ -71,7 +80,9 @@ function CameraScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}
+    accessible = {true}
+    accessibilityLabel = "하단 중앙에 촬영 버튼이 있습니다. 버튼을 누른 후 한 15초 정도 기다려주세요.">
       <View style={styles.topBar}>
         <Image source={require('../assets/logo_text.png')} style={styles.textLogo} />
       </View>
@@ -82,7 +93,7 @@ function CameraScreen() {
           type={Camera.Constants.Type.back}
         />
       </View>
-      <View style={styles.buttonContainer}>
+      <View style={styles.cameraButtonContainer}>
         <TouchableOpacity 
           onPress={takePicture}
           accessible = {true}
@@ -91,6 +102,34 @@ function CameraScreen() {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+  );
+}
+
+export function ResultScreen({navigation, route}) {
+  const {response} = route.params;
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.resultbox}>
+          <View>
+          <Text style={styles.result} 
+          accessible = {true}
+          accessibilityLabel = "테라 캔">
+              {response}
+          </Text>
+          </View>
+          
+          <View style={styles.buttonContainer}>
+          <Pressable 
+          style={[styles.button0, styles.button1]} 
+          onPress={() => navigation.navigate('Home')}
+          accessible = {true}
+          accessibilityLabel = "처음으로 돌아가기">
+          <Text style={styles.buttonText}>처음으로</Text>
+          </Pressable>
+          </View>
+      </View>        
+    </View>
   );
 }
 
@@ -119,7 +158,7 @@ const styles = StyleSheet.create({
     height: height,
     flex: 1,
   },
-  buttonContainer: {
+  cameraButtonContainer: {
     flex: 1.5,
     alignSelf: 'center',
     justifyContent: 'center',
@@ -129,7 +168,47 @@ const styles = StyleSheet.create({
   cameraButton: {
     width: 80,
     height: 80,
-  }
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: 'grey',
+    borderRadius: 5,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    color: 'white', // Set text color to white
+  },
+  resultbox:{
+    flex: 1,
+    marginBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  result: {
+      color: 'white',
+      fontSize: 20,
+  },
+  buttonContainer: {
+    marginTop: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button0: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 200, // Increase the button width
+    height: 80, // Increase the button height
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 32,
+  },
+  button1: {
+    backgroundColor: 'yellow',
+  },
 });
-
-export default CameraScreen;

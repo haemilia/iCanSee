@@ -3,7 +3,9 @@ import {StyleSheet, View, Image, Text, Pressable} from 'react-native';
 
 function HomeScreen({navigation}) {
   return (
-    <View style={styles.container}>
+    <View style={styles.container}
+    accessible = {true}
+    accessibilityLabel = "아이캔씨 어플리케이션. 화면 중앙에 버튼이 있습니다.">
       <View style={styles.logoContainer}>
         <Image source={require('../assets/logo.png')} style={styles.logo} />
       </View>
