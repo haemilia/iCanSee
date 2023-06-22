@@ -4,9 +4,8 @@ import {StyleSheet, View, Text, Pressable,  TextInput, Button} from 'react-nativ
 export function TempOutput({navigation}) {  
     const [stringInput, setStringInput] = useState('Something');  
 
-    const handleButtonPress = (stringInput) => {
-        navigation.navigate('Result', { result: stringInput.toString()});
-
+    const handleButtonPress = () => {
+        navigation.navigate('Result', { result: stringInput });
     };
 
     return (
@@ -15,7 +14,7 @@ export function TempOutput({navigation}) {
             style={styles.input}
             placeholder="Enter"
             onChangeText={newText => setStringInput(newText)}
-            defaultValue = {stringInput}
+            value = {stringInput}
           />
           <Button title="Submit" onPress={handleButtonPress} />
         </View>
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
     },
     result: {
         color: 'white',
-        fontSize: 16,
+        fontSize: 20,
     },
     buttonContainer: {
       marginTop: 30,

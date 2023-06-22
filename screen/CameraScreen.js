@@ -7,6 +7,12 @@ import * as FileSystem from 'expo-file-system';
 const { width, height } = Dimensions.get('window');
 
 function CameraScreen() {
+  useEffect(() => {
+    (async () => {
+      const imagesDir = `${FileSystem.documentDirectory}images/`;
+      await FileSystem.makeDirectoryAsync(imagesDir, { intermediates: true });
+    })();
+  }, []);
 
   const navigation = useNavigation();
   const [hasCameraPermission, setHasCameraPermission] = useState(null);
