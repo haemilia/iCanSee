@@ -4,6 +4,7 @@ import { Camera } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as FileSystem from 'expo-file-system';
 import axios from 'axios';
+import Tts from 'react-native-tts';
 
 const { width, height } = Dimensions.get('window');
 
@@ -107,24 +108,25 @@ export function CameraScreen() {
 
 export function ResultScreen({navigation, route}) {
   const {response} = route.params;
+  
 
   return (
     <View style={styles.container}>
       <View style={styles.resultbox}>
           <View>
-          <Text style={styles.result} 
-          accessible = {true}
-          accessibilityLabel = "테라 캔">
+          <Text style={styles.result} accessible = {true} accessibilityLabel = "테라 캔">
               {response}
           </Text>
           </View>
+          
           
           <View style={styles.buttonContainer}>
           <Pressable 
           style={[styles.button0, styles.button1]} 
           onPress={() => navigation.navigate('Home')}
           accessible = {true}
-          accessibilityLabel = "처음으로 돌아가기">
+          accessibilityLabel = "처음으로 돌아가기"
+          >
           <Text style={styles.buttonText}>처음으로</Text>
           </Pressable>
           </View>
