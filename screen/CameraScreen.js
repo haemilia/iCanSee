@@ -114,9 +114,11 @@ export function ResultScreen({navigation, route}) {
     <View style={styles.container}>
       <View style={styles.resultbox}>
           <View>
-          <Text style={styles.result} accessible = {true} accessibilityLabel = "테라 캔">
+            <Text style={styles.result} 
+            accessible = {true} 
+            accessibilityLabel = "테라 캔">
               {response}
-          </Text>
+              </Text>
           </View>
           
           
